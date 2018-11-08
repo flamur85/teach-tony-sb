@@ -14,10 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.icims.tony.demo.services.DemoServiceInterface;
 import com.icims.tony.school.dto.ClassDTO;
 import com.icims.tony.school.dto.CourseDTO;
+import com.icims.tony.school.entities.CourseEntity;
+import com.icims.tony.school.repositories.CourseRepository;
 
 @RestController
 @RequestMapping("school")
 public class SchoolController {
+	
+	@Autowired
+	private CourseRepository courseRepository;
 
 	@GetMapping("/class")
 	public ClassDTO getClassDTO() {
@@ -31,9 +36,17 @@ public class SchoolController {
 		return new CourseDTO();
 	}
 
-	@PostMapping(path = "/course", consumes = "application/json", produces = "application/json")
+	@PostMapping(path = "/1/course", consumes = "application/json", produces = "application/json")
 	public CourseDTO postCourseDTO(@RequestBody CourseDTO course) {
-		return new CourseDTO();
+		CourseEntity courseEntity = new CourseEntity();
+		courseEntity.setSchoolId(1);
+		courseEntity.setRoom(course.getRoom());
+		courseEntity.setSubject(course.getSubject());
+		courseRepository.save(courseEntity);
+		
+		CourseDTO returnCourseDTO = new CourseDTO();
+		returnCourseDTO.setCourse(courseEntity.getCourseId());
+		return returnCourseDTO;
 	}
 	
 	@PutMapping("/1/course/{id}")
